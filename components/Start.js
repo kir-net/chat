@@ -1,19 +1,10 @@
 import React from 'react';
-import { 
-    View,
-    Text, 
-    TextInput, 
-    Pressable,
-    Button,
-    ImageBackground,
-    StyleSheet 
-} from 'react-native';
+import { View, Text, TextInput, Pressable,
+    Button, ImageBackground, StyleSheet } from 'react-native';
 
 const BackgroundImage = require('../assets/featherlight.png');
 
-
 export default class HomeScreen extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = { 
@@ -34,12 +25,8 @@ export default class HomeScreen extends React.Component {
     setColor = (clickedColor) => {
         this.setState({ color: clickedColor });
     };
-
-        
-    render() {
-
-        //const { navigate } = this.props.navigation;
-        
+       
+    render() {        
         return (
             <View style={styles.container}>
 
@@ -48,12 +35,7 @@ export default class HomeScreen extends React.Component {
                     source={BackgroundImage} 
                     resizeMode="cover"                   
                 >
-                    <Text
-                        style={styles.title}                       
-                    >
-                        CozyChat
-                    </Text>
-
+                    <Text style={styles.title}> CozyChat </Text>
                     <View style={styles.box}>
 
                         {/* Input for user name */}
@@ -106,14 +88,12 @@ export default class HomeScreen extends React.Component {
                             fontColor='#ffffff'
                             color='#757083'                          
                             title="start"                   
-                            onPress={() => 
-                                this.props.navigation.navigate(
-                                    'ChatScreen', {
-                                        name: this.state.name,
-                                        color: this.state.color
-                                    }
-                                )
-                            }
+                            onPress={() =>  this.props.navigation.navigate(
+                                'ChatScreen', {
+                                    name:  this.state.name,
+                                    color: this.state.color
+                                }
+                            )}
                         />
                     </View>
                 </ImageBackground>               
@@ -126,6 +106,8 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     box: {
