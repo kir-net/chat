@@ -24,7 +24,7 @@ export default class ChatScreen extends React.Component {
                         ? this.props.route.params.color 
                         : '#bbbbbb' 
                 }}>
-                <Text>{this.props.route.params.name}</Text>
+                <Text>chat will take place here</Text>
             </View>
         )
     }
