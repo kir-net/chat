@@ -27,6 +27,7 @@ export default class App extends React.Component {
 
     render() {
         return (
+        // enable navigation
         <NavigationContainer>
             <Stack.Navigator
             initialRouteName="HomeScreen"
