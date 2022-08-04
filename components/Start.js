@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text, TextInput, Pressable,
     Button, ImageBackground, StyleSheet } from 'react-native';
 
 const BackgroundImage = require('../assets/featherlight.png');
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { 
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     
     title: {
         fontSize: 45,
-        fontWeight: 600,
+        fontWeight: '600',
         backgroundColor: '#757083',
         opacity: '70%',
         color: '#FFFFFF',
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
 
     text: {
         fontSize: 16,
-        fontWeight: 300,
+        fontWeight: '300',
         color: '#757083',
         opacity: '100%',
     },
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
 
     textInput: {
         fontSize: 16,
-        fontWeight: 300,
+        fontWeight: '300',
         fontColor: '#757083',
         opacity: 0.5,
         height: 40, 

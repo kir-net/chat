@@ -11,15 +11,8 @@ import ChatScreen from './components/Chat';
 // Create the navigator
 const Stack = createStackNavigator();
 
-export default class App extends React.Component {
+export default class App extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            text: ''
-        }
-    }
-    
     render() {
         return (
             // enable navigation
