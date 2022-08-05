@@ -34,7 +34,7 @@ export default class ChatScreen extends Component {
         firebase.initializeApp(firebaseConfig);
 
         // reference to the Firestore message collection
-        this.refMessages = firebase.firestore().collection("messages");
+        this.referenceChatMessages = firebase.firestore().collection("messages");
     };
 
     componentDidMount() {
@@ -62,7 +62,7 @@ export default class ChatScreen extends Component {
                 .orderBy("createdAt", "desc")
                 .onSnapshot(this.onCollectionUpdate);
             // create a reference to the active user's documents (shopping lists)
-            this.referenceShoppinglistUser = firebase
+            this.referenceChatMessages = firebase
                 .firestore()
                 .collection('messages')
                 .where("uid", "==", this.state.uid);
@@ -107,7 +107,7 @@ export default class ChatScreen extends Component {
 
     addMessages() {
         const message = this.state.messages[0];
-        this.refMessages.add({
+        this.referenceChatMessages.add({
             _id: message._id,
             text: message.text || "",
             createdAt: message.createdAt,
