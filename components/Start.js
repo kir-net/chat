@@ -123,10 +123,9 @@ const styles = StyleSheet.create({
         fontSize: 45,
         fontWeight: '600',
         backgroundColor: '#757083',
-        opacity: '70%',
         color: '#FFFFFF',
         padding: 15,
-        borderRadius: '100%',          
+        borderRadius: 100,          
         marginBottom: 155,
     },
 
@@ -141,7 +140,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '300',
         color: '#757083',
-        opacity: '100%',
     },
 
     colorContainer: {
@@ -176,13 +174,12 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: 16,
         fontWeight: '300',
-        fontColor: '#757083',
-        opacity: 0.5,
+        color: '#757083',
         height: 40, 
         borderColor: 'gray', 
         borderWidth: 1,
         padding: 3,
-        marginBottom: 25,
+        marginBottom: 5,
         backgroundColor: 'white'
     },
     
