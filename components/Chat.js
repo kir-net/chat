@@ -71,6 +71,17 @@ export default class Chat extends Component {
         }
     };
 
+    async deleteMessages() {
+        try {
+            await AsyncStorage.removeItem('messages');
+            this.setState({
+                messages: []
+            })
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     componentDidMount() {
         // Set name as title chat
         let { name } = this.props.route.params;
