@@ -173,8 +173,7 @@ export default class Chat extends Component {
                     left: {
                         backgroundColor: 'lightcyan',
                         paddingHorizontal: 8,
-                        paddingVertical: 1,
-                        
+                        paddingVertical: 1,                        
                     },
                     right: {
                         backgroundColor: '#4682B4',

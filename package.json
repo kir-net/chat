@@ -16,6 +16,7 @@
     "@react-native-community/netinfo": "8.2.0",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
+    "cookies": "^0.8.0",
     "expo": "~45.0.0",
     "expo-image-picker": "~13.1.1",
     "expo-location": "~14.2.2",
