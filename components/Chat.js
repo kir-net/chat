@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+import firebase from 'firebase';
+import 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 
-
-// import firestore
-import firebase from "firebase";
-import 'firebase/firestore';
-
 export default class Chat extends Component {
+
+    // -------------------------------------------
+    //    constructor
+    // -------------------------------------------    
     constructor() {
         super();
         this.state = {
@@ -18,7 +19,6 @@ export default class Chat extends Component {
             user: {
                 _id: '',
                 name: '',
-                avatar: '',
             },
         }   
         // Firebase configuration
@@ -38,6 +38,10 @@ export default class Chat extends Component {
         this.referenceChatMessages = firebase.firestore().collection('messages');
     }
 
+
+    // -------------------------------------------
+    //    onCollectionUpdate
+    // -------------------------------------------
     onCollectionUpdate = (querySnapshot) => {
         const messages = [];
         // Go through each document
@@ -51,49 +55,52 @@ export default class Chat extends Component {
                 user: {
                     _id: data.user._id,
                     name: data.user.name,
-                    avatar: data.user.avatar || '',
                 },
             });
         });
-        this.setState({
-            messages,
-        });
+        this.setState({messages});
     };
 
-    saveMessages = async () => {
-        try {
-            await AsyncStorage.setItem(
-                'messages',
-                JSON.stringify(this.state.messages)
-            );
-        } catch (e) {
-            console.log(e.message);
-        }
+
+    // -------------------------------------------
+    //    asyncStorage
+    // -------------------------------------------
+    // get messages from asyncStorage
+    async getMessages() {
+        let messages = '';
+        try { messages = await AsyncStorage.getItem('messages') || [];
+            this.setState({messages: JSON.parse(messages)});
+        } catch (error) {console.log(error.message)}
     };
 
+    // save messages in asyncStorage
+    async saveMessages() {
+        try { await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+        } catch (error) {console.log(error.message)}
+    };
+
+    // delete messages in asyncStorage
     async deleteMessages() {
-        try {
-            await AsyncStorage.removeItem('messages');
-            this.setState({
-                messages: []
-            })
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
+        try { await AsyncStorage.removeItem('messages');
+            this.setState({messages: []})
+        } catch (error) {console.log(error.message)}
+    };
 
+
+    // -------------------------------------------
+    //    componentDidMount()
+    // -------------------------------------------
     componentDidMount() {
         // Set name as title chat
         let { name } = this.props.route.params;
         this.props.navigation.setOptions({ title: name });
+        
 
         // Check if user is offline or online
-        NetInfo.fetch().then((connection) => {
+        NetInfo.fetch().then(connection => {
             if (connection.isConnected) {
-                this.setState({
-                    isConnected: true,
-                });
-                // Reference to load messages from Firebase
+                this.setState({isConnected: true});
+                    // Reference to load messages from Firebase
                 this.referenceChatMessages = firebase
                     .firestore()
                     .collection('messages');
@@ -102,15 +109,17 @@ export default class Chat extends Component {
                 this.authUnsubscribe = firebase
                     .auth()
                     .onAuthStateChanged(async (user) => {
-                        if (!user) {
-                            firebase.auth().signInAnonymously();
-                        }
+                        if (!user) {firebase.auth().signInAnonymously() }
                         this.setState({
                             uid: user.uid,
-                            messages: [],
+                            messages: [{
+                                _id: 1,
+                                text: `Hello ${this.props.route.params.name}`,
+                                createdAt: new Date(),
+                            }],
                             user: {
-                            _id: user.uid,
-                            name: name,
+                                _id: user.uid,
+                                name: name,
                             },
                         });
                         this.unsubscribe = this.referenceChatMessages
@@ -118,99 +127,104 @@ export default class Chat extends Component {
                             .onSnapshot(this.onCollectionUpdate);
                     });
             } else {
-            this.setState({
-                isConnected: false,
-            });
+                this.setState({isConnected: false});
+                this.getMessages();
             }
         });
     }
 
+    // -------------------------------------------
+    //    componentWillUnmount()
+    // -------------------------------------------
     componentWillUnmount() {
-    if (this.isConnected) {
-        this.unsubscribe();
-        this.authUnsubscribe();
-    }
-    }
-
-    // Add message to the state
-    onSend(messages = []) {
-        this.setState(
-            (previousState) => ({
-                messages: GiftedChat.append(previousState.messages, messages),
-            }),
-            () => {
-                // Save messages locally with Async Storage
-                this.saveMessages();
-                // Call addMessage with last message in message state
-                if (this.state.isConnected === true) {
-                    this.addMessages(this.state.messages[0]);
-                }
-            }
-        );
+        if (this.isConnected) {
+            this.unsubscribe();
+            this.authUnsubscribe();
+        }
     }
 
-    // Add message to Firestore
-    addMessages = (message) => {
-        console.log(this),
+
+    // -------------------------------------------
+    //    custom functions
+    // -------------------------------------------
+
+    // Adds messages to cloud storage
+    addMessages() {
+        const message = this.state.messages[0];
         this.referenceChatMessages.add({
             uid: this.state.uid,
             _id: message._id,
-            text: message.text || '',
+            text: message.text || "",
             createdAt: message.createdAt,
-            user: {
-                _id: this.state.uid, 
-                name:this.state.user.name,       
-            }
+            user: message.user,       
         });
-    };
+    }
+  
+    onSend(messages = []) {
+        this.setState((previousState) => ({
+            messages: GiftedChat.append(previousState.messages, messages),
+        }),() => {
+            this.addMessages();
+            this.saveMessages();
+        });
+    }
+
+
+
+    // -------------------------------------------
+    //    rendering
+    // -------------------------------------------   
+    // Don't render input bar if offline
+    renderInputToolbar(props) {
+            if (this.state.isConnected == false) {
+                console.log('is offline');
+
+        } else {
+            console.log('is online');
+            return <InputToolbar {...props} />}
+    }
 
     // style message bubbles
     renderBubble(props) {
-        return (
-            <Bubble
-                {...props}
-                wrapperStyle={{
-                    left: {
-                        backgroundColor: 'lightcyan',
-                        paddingHorizontal: 8,
-                        paddingVertical: 1,                        
-                    },
-                    right: {
-                        backgroundColor: '#4682B4',
-                        paddingHorizontal: 8,
-                        paddingVertical: 1,
-                    },
-                }}
-            />
-        )
+        return (<Bubble {...props}
+            wrapperStyle={{
+                left: { 
+                    backgroundColor: 'lightcyan',                   
+                    paddingHorizontal: 8,
+                    paddingVertical: 1,                        
+                },
+                right: { 
+                    backgroundColor: '#4682B4',                   
+                    paddingHorizontal: 8,
+                    paddingVertical: 1,
+                },
+            }}
+        />)
     }
 
+    // render main
     render() {
-        return (        
-            <View 
-                style={{
-                    flex:1, 
-                    justifyContent: 'center', 
-                    alignItems: 'center',
-                    // set background color as chosen by user
-                    backgroundColor: this.props.route.params.color
-                        ? this.props.route.params.color 
-                        : '#bbbbbb' 
-                }}>
-                
-                <GiftedChat
-                    renderBubble={this.renderBubble.bind(this)}              
-                    messages = {this.state.messages}               
-                    onSend = {(messages) => this.onSend(messages)}
-                    user={{
-                        _id: 1,
-                    }}
-                />
-                { Platform.OS === 'android' 
-                    ? <KeyboardAvoidingView behavior="height" /> 
-                    : null
-                }
-            </View>
-        )
+        return (<View 
+            style={{
+                flex:1,               
+                // set background color as chosen by user
+                backgroundColor: this.props.route.params.color
+                    ? this.props.route.params.color 
+                    : '#bbbbbb' 
+            }}>          
+            <GiftedChat
+                renderBubble={this.renderBubble.bind(this)} 
+                renderInputToolbar={this.renderInputToolbar.bind(this)}          
+                messages = {this.state.messages}               
+                onSend = {(messages) => this.onSend(messages)}
+                user={{
+                    _id: 1,
+                }}
+            />
+            { Platform.OS === 'android' 
+                ? <KeyboardAvoidingView behavior="height" /> 
+                : null
+            }
+        </View>)
     }
 }
