@@ -2,6 +2,44 @@
 
 **CozyChat** is a work-in-progress chat app for mobile devices using React Native. The app will provide users with a chat interface and options to share images and their location.
 
+---
+
+## Getting started
+To set up **CozyChat** in your own system, please follow these steps:
+#### **Development environment setup**
+- install the latest LTS Node version
+- run  `npm install expo-cli --global`
+- to run **CozyChat** on Windows or Linux, install [Android studio](https://developer.android.com/studio) 
+- to run **CozyChat** on Mac, install [XCode](https://developer.apple.com/xcode/) 
+- to run **CozyChat** on your phone, get the ExpoApp [for iOS](https://apps.apple.com/de/app/expo-go/id982107779) / 
+     [for Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US)
+#### **Database configuration**
+- Create a [Firebase](https://firebase.google.com/) account, and sign in.
+- Click on "create a project" and follow the steps. Start in test mode, then start a collection. Select "Auto-ID" to generate a random Document ID.
+- Open up "Settings", then "General" tab. Under the section "Your apps", link Firebase to the app by clicking the tag icon.
+- Click "Firestore for Web" and then copy the contents of the config object info your .js script. Follow the instructions to initialize the App.
+
+
+#### **Installation of the necessary libraries (here using npm and expo)**
+- `npm install react`
+- `npm install react-native`
+- `npm install react-native-gifted-chat`
+- `npm install @react-native-community/netinfo`
+- `npm install @react-native-async-storage/async-storage`
+- `npm install react-navigation`
+- `npm install firebase`
+- `expo install expo-permissions`
+- `expo install expo-image-picker`
+
+---
+
+
+## Key Features
+- A page where users can enter their name and choose a background color for the chat screen before joining the chat.
+- A page displaying the conversation, as well as an input field and submit button.
+- The chat must provide users with two additional communication features: sending images and location data.
+- Data gets stored online and offline.
+
 
 ## User Stories
 - As a new user, I want to be able to easily enter a chat room so I can quickly start talking to my
@@ -14,32 +52,3 @@ the latest news.
 time.
 - As a user with a visual impairment, I want to use a chat app that is compatible with a screen
 reader so that I can engage with a chat interface.
-
-## Key Features
-- A page where users can enter their name and choose a background color for the chat screen before joining the chat.
-- A page displaying the conversation, as well as an input field and submit button.
-- The chat must provide users with two additional communication features: sending images and location data.
-- Data gets stored online and offline.
-
-## Technical Requirements
-- The app must be written in React Native.
-- The app must be developed using Expo.
-- The app must be styled according to the given screen design.
-- Chat conversations must be stored in Google Firestore Database.
-- The app must authenticate users anonymously via Google Firebase authentication.
-- Chat conversations must be stored locally.
-- The app must let users pick and send images from the phone’s image library.
-- The app must let users take pictures with the device’s camera app, and send them.
-- The app must store images in Firebase Cloud Storage.
-- The app must be able to read the user’s location data.
-- Location data must be sent via the chat in a map view.
-- The chat interface and functionality must be created using the Gifted Chat library.
-- The app’s codebase must contain comments.
-
-## Design Specifications
-- Vertical and horizontal spacing: evenly distributed
-- App title: font size 45, font weight 600, font color #FFFFFF
-- “Your name”: font size 16, font weight 300, font color #757083, 50% opacity
-- “Choose background color”: font size 16, font weight 300, font color #757083, 100% opacity
-- Color options HEX codes: #090C08; #474056; #8A95A5; #B9C6AE
-- Start chatting button: font size 16, font weight 600, font color #FFFFFF, button color #757083
