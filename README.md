@@ -30,6 +30,9 @@ To set up **CozyChat** in your own system, please follow these steps:
 - `npm install firebase`
 - `expo install expo-permissions`
 - `expo install expo-image-picker`
+- `expo install expo-location`
+- `expo install react-native-maps`
+
 
 ---
 
