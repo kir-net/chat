@@ -19,7 +19,6 @@ To set up **CozyChat** in your own system, please follow these steps:
 - Open up "Settings", then "General" tab. Under the section "Your apps", link Firebase to the app by clicking the tag icon.
 - Click "Firestore for Web" and then copy the contents of the config object info your .js script. Follow the instructions to initialize the App.
 
-
 #### **Installation of the necessary libraries (here using npm and expo)**
 - `npm install react`
 - `npm install react-native`
@@ -35,6 +34,8 @@ To set up **CozyChat** in your own system, please follow these steps:
 - `expo install react-native-maps`
 - `expo install expo-camera`
 
+#### **Start Expo project**
+- From project folder, run `npm start` or `expo start`
 
 ---
 
