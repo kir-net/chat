@@ -28,10 +28,12 @@ To set up **CozyChat** in your own system, please follow these steps:
 - `npm install @react-native-async-storage/async-storage`
 - `npm install react-navigation`
 - `npm install firebase`
+- `npm install expo-module-scripts`
 - `expo install expo-permissions`
 - `expo install expo-image-picker`
 - `expo install expo-location`
 - `expo install react-native-maps`
+- `expo install expo-camera`
 
 
 ---

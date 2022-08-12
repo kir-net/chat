@@ -5,14 +5,17 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
+
 
 export default class Chat extends Component {
 
     // -------------------------------------------
     //    constructor
     // -------------------------------------------    
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             messages: [],
             uid: 0,
@@ -59,6 +62,7 @@ export default class Chat extends Component {
             });
         });
         this.setState({messages});
+        this.saveMessages();
     };
 
 
@@ -112,11 +116,7 @@ export default class Chat extends Component {
                         if (!user) {firebase.auth().signInAnonymously() }
                         this.setState({
                             uid: user.uid,
-                            messages: [{
-                                _id: 1,
-                                text: `Hello ${this.props.route.params.name}`,
-                                createdAt: new Date(),
-                            }],
+                            messages: [],
                             user: {
                                 _id: user.uid,
                                 name: name,
@@ -154,9 +154,11 @@ export default class Chat extends Component {
         this.referenceChatMessages.add({
             uid: this.state.uid,
             _id: message._id,
-            text: message.text || "",
+            text: message.text || '',
             createdAt: message.createdAt,
-            user: message.user,       
+            user: this.state.user, 
+            image: message.image || null,
+            location: message.location || null,      
         });
     }
   
@@ -173,15 +175,34 @@ export default class Chat extends Component {
 
     // -------------------------------------------
     //    rendering
-    // -------------------------------------------   
+    // -------------------------------------------  
+    
+    renderCustomActions = (props) => <CustomActions {...props} />;
+
+    renderCustomView(props) {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+                region={{
+                    latitude: currentMessage.location.latitude,
+                    longitude: currentMessage.location.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
+                />
+            );
+        }
+        return null;
+    }
+
+
     // Don't render input bar if offline
     renderInputToolbar(props) {
-            if (this.state.isConnected == false) {
-                console.log('is offline');
-
-        } else {
-            console.log('is online');
-            return <InputToolbar {...props} />}
+        if (this.state.isConnected == false) {
+    } else {
+        return <InputToolbar {...props} />}
     }
 
     // style message bubbles
@@ -214,7 +235,9 @@ export default class Chat extends Component {
             }}>          
             <GiftedChat
                 renderBubble={this.renderBubble.bind(this)} 
-                renderInputToolbar={this.renderInputToolbar.bind(this)}          
+                renderInputToolbar={this.renderInputToolbar.bind(this)}   
+                renderActions={this.renderCustomActions.bind(this)}  
+                renderCustomView={this.renderCustomView}     
                 messages = {this.state.messages}               
                 onSend = {(messages) => this.onSend(messages)}
                 user={{
