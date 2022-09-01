@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-import firebase from 'firebase';
+
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
@@ -23,6 +28,8 @@ export default class Chat extends Component {
                 _id: '',
                 name: '',
             },
+            image: null,
+            location: null
         }   
         // Firebase configuration
         const firebaseConfig = {
@@ -59,10 +66,11 @@ export default class Chat extends Component {
                     _id: data.user._id,
                     name: data.user.name,
                 },
+                image: data.image || null,
+                location: data.location || null,
             });
         });
         this.setState({messages});
-        this.saveMessages();
     };
 
 
@@ -104,7 +112,7 @@ export default class Chat extends Component {
         NetInfo.fetch().then(connection => {
             if (connection.isConnected) {
                 this.setState({isConnected: true});
-                    // Reference to load messages from Firebase
+                // Reference to load messages from Firebase
                 this.referenceChatMessages = firebase
                     .firestore()
                     .collection('messages');
@@ -166,8 +174,9 @@ export default class Chat extends Component {
         this.setState((previousState) => ({
             messages: GiftedChat.append(previousState.messages, messages),
         }),() => {
-            this.addMessages();
-            this.saveMessages();
+            this.addMessages(this.state.messages[0]);
+            this.saveMessages()
+            this.deleteMessages()
         });
     }
 
