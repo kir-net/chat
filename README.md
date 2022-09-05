@@ -1,6 +1,6 @@
 # CozyChat
 
-**CozyChat** is a work-in-progress chat app for mobile devices using React Native. The app will provide users with a chat interface and options to take and share photos and their location.
+**CozyChat** is a chat app built with React Native. It is optimized for both Android an iOS devices. The app will provide users with a chat interface and options to take and share photos and their location.
 
 ---
 
